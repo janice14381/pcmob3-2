@@ -11,11 +11,26 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 const Stack = createNativeStackNavigator();
 const db = SQLite.openDatabase('notes.db');
 
-function addNote(){
- console.log('add notes');
-}
-
 function NoteScreen({navigation}){
+  const [ListArray, setListArray] = useState([
+    {
+      task: "task0",
+      done: true,
+      id:"0"
+    },
+    {
+      task: "task1",
+      done: false,
+      id:"1"
+    },
+    {
+      task: "task2",
+      done: true,
+      id:"2"
+    }
+
+  ]);
+
   useEffect(
     () =>{
       navigation.setOptions({
@@ -33,10 +48,31 @@ function NoteScreen({navigation}){
     }
   );
 
+  function addNote(){
+    let newNote = {
+      task: "new Notes",
+      done: false,
+      id: ListArray.length.toString(),    
+    };
+
+    setListArray([...ListArray,newNote]);
+  }
+
+  function renderItem({item}){
+    return (
+        <View style={{
+          padding:10,
+          width:"100%",
+
+      }}>
+          <Text>{item.task}</Text> 
+        </View>  
+    );
+  }
 
   return(
     <View style={styles.container}>
-      <Text>note</Text>
+      <FlatList data={ListArray} renderItem={renderItem} keyExtractor={(item)=>item.name}>note</FlatList>
     </View>
   );
 }
