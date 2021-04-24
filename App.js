@@ -61,10 +61,11 @@ function NoteScreen({navigation}){
   function renderItem({item}){
     return (
         <View style={{
-          padding:10,
-          width:"100%",
-
-      }}>
+          padding: 15,
+          width: "100%",
+          borderBottomColor: "#ccc",
+          borderBottomWidth: 1
+        }}>
           <Text>{item.task}</Text> 
         </View>  
     );
@@ -72,7 +73,7 @@ function NoteScreen({navigation}){
 
   return(
     <View style={styles.container}>
-      <FlatList data={ListArray} renderItem={renderItem} keyExtractor={(item)=>item.name}>note</FlatList>
+      <FlatList style={{ width : "100%"}} data={ListArray} renderItem={renderItem} keyExtractor={(item)=>item.name}>note</FlatList>
     </View>
   );
 }
