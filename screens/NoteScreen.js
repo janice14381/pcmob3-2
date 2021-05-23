@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import * as SQLite from 'expo-sqlite';
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+
+const db = SQLite.openDatabase('notes.db');
 
 export default function NoteScreen({navigation, route}){
-  const [listArray, setListArray] = useState([
+  const [listArray, setListArray] = useState([]);
+  /*const [listArray, setListArray] = useState([
     {
       task: "task0",
       done: true,
@@ -20,7 +25,29 @@ export default function NoteScreen({navigation, route}){
       id:"2"
     }
 
-  ]);
+  ]);*/
+
+  function refreshNotes(){
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM notes",
+        null,
+        (txObj, {rows:{ _array}}) => setListArray(_array),
+        (txObj, error) => console.log("error ", error)
+      );
+    });
+  }
+
+  useEffect(() => {
+      db.transaction((tx)=>{
+        tx.executeSql(
+          'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, done INT);'
+        );
+      },
+      null,
+      refreshNotes
+      );
+    }, []);
 
   useEffect(
     () =>{
@@ -43,13 +70,20 @@ export default function NoteScreen({navigation, route}){
   useEffect(
     () =>{
       if(route.params?.text){
-console.log(route.params.text);
-        const newNote = {
+        console.log(route.params.text);
+        db.transaction(
+          (tx) => {
+            tx.executeSql("INSERT INTO notes (done, title) VALUES (0,?)",[route.params.text,]);
+          },
+          null,
+          refreshNotes
+        );  
+        /*const newNote = {
           task: route.params.text,
           done: false,
           id: listArray.length.toString(),
         };
-        setListArray([...listArray, newNote]);
+        setListArray([...listArray, newNote]);*/
       }  
 
     },[route.params?.text]
@@ -69,18 +103,25 @@ console.log(route.params.text);
     
   }
 
+
+
   function renderItem({item}){
     return (
-        <View style={{
-          padding: 15,
-          width: "100%",
+        <View 
+        style={{
+          padding: 10,
+          paddingTop: 20,
+          paddingBottom: 20,
           borderBottomColor: "#ccc",
           borderBottomWidth: 1,
-          flexDirection: "row"
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}>
           <Text style={{padding:5}}>{item.id}</Text> 
-          <Text style={{padding:5}}>{item.task}</Text> 
-          <Text style={{padding:5}}>{item.done}</Text> 
+          <Text style={{padding:5}}>{item.title}</Text> 
+          <TouchableOpacity onPress={() => deleteNote(item.id)}>
+            <SimpleLineIcons name="trash" size={16} color="#944" />
+          </TouchableOpacity>
         </View>  
     );
   }
