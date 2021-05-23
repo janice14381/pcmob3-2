@@ -5,14 +5,13 @@ import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 import { SimpleLineIcons } from '@expo/vector-icons';
-
-
+import AddScreen from "./screens/AddScreen";
+import NoteStack from "./screens/NoteStack";
 
 const Stack = createNativeStackNavigator();
-const InnerStack = createNativeStackNavigator();
 const db = SQLite.openDatabase('notes.db');
 
-
+/*
 function NoteScreen({navigation, route}){
   const [listArray, setListArray] = useState([
     {
@@ -55,7 +54,7 @@ function NoteScreen({navigation, route}){
     () =>{
       console.log(route.params?.text);
       if(route.params?.text){
-        console.log(route.params.text);
+console.log(route.params.text);
         const newNote = {
           task: route.params.text,
           done: false,
@@ -73,14 +72,14 @@ function NoteScreen({navigation, route}){
 
   function addNote(){
     navigation.navigate("Add Screen")
-  /*  let newNote = {
-      task: "new Notes",
-      done: false,
-      id: ListArray.length.toString(),    
-    };
+      //let newNote = {
+      //task: "new Notes",
+      //done: false,
+      //id: ListArray.length.toString(),    
+    //};
 
-    setListArray([...ListArray,newNote]);
-  */
+    //setListArray([...ListArray,newNote]);
+  
 
     
   }
@@ -93,7 +92,9 @@ function NoteScreen({navigation, route}){
           borderBottomColor: "#ccc",
           borderBottomWidth: 1
         }}>
+          <Text>{item.id}</Text> 
           <Text>{item.task}</Text> 
+          <Text>{item.done}</Text> 
         </View>  
     );
   }
@@ -104,9 +105,11 @@ function NoteScreen({navigation, route}){
     </View>
   );
 }
+*/
 
-
+/*
 function NoteStack(){
+  console.log("AAAAA");
   return(
     <InnerStack.Navigator>
         <InnerStack.Screen
@@ -129,7 +132,9 @@ function NoteStack(){
 
   );
 }
+*/
 
+/*
 function AddScreen({navigation}){
   const [text, setText] = useState('');
 
@@ -152,6 +157,7 @@ function AddScreen({navigation}){
 
   );
 }
+*/
 
 export default function App() {
   return (
@@ -170,13 +176,4 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffc',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
