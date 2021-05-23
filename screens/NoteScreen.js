@@ -103,7 +103,16 @@ export default function NoteScreen({navigation, route}){
     
   }
 
-
+  function deleteNote(id){
+    console.log(id);
+    db.transaction(
+      (tx) => {
+        tx.executeSql(`DELETE FROM notes WHERE id=${id}`);
+      },
+      null,
+      refreshNotes
+    ); 
+  }
 
   function renderItem({item}){
     return (
